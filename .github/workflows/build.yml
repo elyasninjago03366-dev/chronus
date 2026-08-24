@@ -1,0 +1,49 @@
+name: Build Chronus Android for Chromebook
+
+on:
+  workflow_dispatch: # اجرای دستی از تب Actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ۱. کلون کردن ریپازیتوری به همراه تمام ساب‌ماژول‌ها
+      - name: Checkout Repository with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+
+      # ۲. نصب جاوا ۱۷
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # ۳. نصب NDK نسخه 27
+      - name: Setup Android SDK & NDK
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 'latest'
+          log-accepted-android-sdk-licenses: true
+
+      - name: Install Specific NDK
+        run: |
+          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.2.12479018"
+
+      # ۴. مجوز دادن به اجرای gradlew
+      - name: Grant Execute Permission for Gradlew
+        run: chmod +x gradlew
+
+      # ۵. بیلد نسخه Standalone Debug
+      - name: Build Standalone Debug APK
+        run: ./gradlew :TMessagesProj_AppStandalone:assembleDebug --stacktrace
+
+      # ۶. آپلود فایل APK با اسم chronus
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chronus-Chromebook-APK
+          path: TMessagesProj_AppStandalone/build/outputs/apk/debug/*.apk
