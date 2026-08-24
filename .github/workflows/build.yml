@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ۱. کلون کامل به همراه تمام submodules به صورت submodules: true و submodules: recursive
+      # ۱. کلون کامل به همراه تمام submodules
       - name: Checkout Repository with Submodules
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: 0
 
-      # ۲. اطمینان از مقداردهی تمام ساب‌ماژول‌ها
+      # ۲. اطمینان از دانلود و دریافت کامل تمام ساب‌ماژول‌های زیرمجموعه
       - name: Checkout Nested Submodules
         run: |
           git submodule update --init --recursive --force
