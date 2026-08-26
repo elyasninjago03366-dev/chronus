@@ -9,9 +9,10 @@ workflows:
         PACKAGE_NAME: "org.telegram.messenger"
 
     scripts:
-      - name: Fetch Submodules
+      - name: Checkout Submodules Deeply
         script: | 
-          git submodule update --init --recursive
+          git submodule deinit -f . || true
+          git submodule update --init --recursive --force
 
       - name: Set Android SDK location
         script: | 
@@ -23,7 +24,7 @@ workflows:
 
       - name: Build Android APK
         script: | 
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
     artifacts:
       - app/build/outputs/apk/**/*.apk
