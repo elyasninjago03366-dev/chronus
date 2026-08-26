@@ -2,13 +2,17 @@ workflows:
   android-build:
     name: Build Chronus APK
     max_build_duration: 60
-    instance_type: mac_mini_m1 # سرور استاندارد پلن رایگان
+    instance_type: mac_mini_m1
 
     environment:
       vars:
         PACKAGE_NAME: "org.telegram.messenger"
 
     scripts:
+      - name: Fetch Submodules
+        script: | 
+          git submodule update --init --recursive
+
       - name: Set Android SDK location
         script: | 
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
@@ -19,7 +23,7 @@ workflows:
 
       - name: Build Android APK
         script: | 
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug --no-daemon
 
     artifacts:
       - app/build/outputs/apk/**/*.apk
