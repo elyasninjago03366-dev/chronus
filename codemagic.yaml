@@ -20,9 +20,9 @@ workflows:
           chmod +x gradlew
 
       - name: Build Android APK
-        script: | 
-          ./gradlew assembleDebug -x :TMessagesProj_AppTests:generateScheme -x test --stacktrace
-
+    script: | 
+      ./gradlew assembleAfatDebug -x :TMessagesProj_AppTests:generateScheme -x test --stacktrace
+      
     artifacts:
       - app/build/outputs/apk/**/*.apk
       - TMessagesProj/build/outputs/apk/**/*.apk
