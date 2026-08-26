@@ -7,16 +7,13 @@ workflows:
     environment:
       vars:
         PACKAGE_NAME: "org.telegram.messenger"
+        GRADLE_OPTS: "-Xmx3072m -Dorg.gradle.daemon=false"
 
     scripts:
-      - name: Checkout Submodules Deeply
-        script: | 
-          git submodule deinit -f . || true
-          git submodule update --init --recursive --force
-
-      - name: Set Android SDK location
+      - name: Set Android SDK & NDK location
         script: | 
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+          echo "ndk.dir=$ANDROID_NDK_ROOT" >> "$CM_BUILD_DIR/local.properties"
 
       - name: Grant execute permissions for gradlew
         script: | 
@@ -24,7 +21,8 @@ workflows:
 
       - name: Build Android APK
         script: | 
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug -x :TMessagesProj_AppTests:generateScheme -x test --stacktrace
 
     artifacts:
       - app/build/outputs/apk/**/*.apk
+      - TMessagesProj/build/outputs/apk/**/*.apk
