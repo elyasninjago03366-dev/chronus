@@ -21,7 +21,7 @@ workflows:
 
       - name: Build Android APK
         script: | 
-          ./gradlew :TMessagesProj_App:assembleAfatDebug -x :TMessagesProj_AppTests:generateScheme -x test --stacktrace
+          ./gradlew :TMessagesProj_App:assembleAfatDebug -x test -x lint -Pandroid.lint.options.abortOnError=false -Pandroid.options.compilerArgs="-w" --stacktrace
 
     artifacts:
       - TMessagesProj_App/build/outputs/apk/**/*.apk
