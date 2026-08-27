@@ -7,7 +7,7 @@ workflows:
     environment:
       vars:
         PACKAGE_NAME: "org.telegram.messenger"
-        GRADLE_OPTS: "-Xmx6144m -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=4"
+        GRADLE_OPTS: "-Xmx6144m -Dorg.gradle.daemon=false"
 
     scripts:
       - name: Set Android SDK & NDK location
@@ -21,7 +21,7 @@ workflows:
 
       - name: Build Android APK
         script: | 
-          ./gradlew :TMessagesProj_App:assembleAfatDebug -Pandroid.injected.build.abi.arm64-v8a=true -x :TMessagesProj_AppTests:generateScheme -x test --stacktrace
+          ./gradlew :TMessagesProj_App:assembleAfatDebug -x :TMessagesProj_AppTests:generateScheme -x test --stacktrace
 
     artifacts:
       - TMessagesProj_App/build/outputs/apk/**/*.apk
